@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<void | Response> {
   const userData: RegisterData = await req.json();
 
   const user = await prisma.user.findFirst({
@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
       JSON.stringify({
         status: 409,
         message: "User with this email is already in the database",
-      })
+      }),
     );
   }
 
   if (userData.password !== userData.passwordConfirmation) {
     return new Response(
-      JSON.stringify({ status: 409, message: "Passwords do not match" })
+      JSON.stringify({ status: 409, message: "Passwords do not match" }),
     );
   }
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     process.env.JWT_SECRET as string,
     {
       expiresIn: "1 day",
-    }
+    },
   );
 
   return Response.json({ token: jwtToken });

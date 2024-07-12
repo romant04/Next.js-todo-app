@@ -4,7 +4,7 @@ import { LoginData } from "@/src/types/user";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<void | Response> {
   const userData: LoginData = await req.json();
 
   const user = await prisma.user.findFirst({
@@ -12,19 +12,20 @@ export async function POST(req: NextRequest) {
   });
 
   if (!user) {
-    return {
-      status: 400,
-      json: { error: "User not found" },
-    };
+    return new Response(
+      JSON.stringify({
+        status: 400,
+        message: "User with this email was not found",
+      }),
+    );
   }
 
   const passwordMatch = await bcrypt.compare(userData.password, user.password);
 
   if (!passwordMatch) {
-    return {
-      status: 400,
-      json: { error: "Wrong password" },
-    };
+    return new Response(
+      JSON.stringify({ status: 400, message: "Wrong password" }),
+    );
   }
 
   const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
