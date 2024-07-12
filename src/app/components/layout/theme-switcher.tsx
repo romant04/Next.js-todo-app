@@ -8,7 +8,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <button
-      className="w-20 cursor-pointer rounded-full p-3 text-sm text-gray-100 hover:text-gray-300"
+      className="cursor-pointer rounded-full p-3 text-sm text-gray-100 hover:text-gray-300"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "light" ? <FaMoon size={26} /> : <FaSun size={26} />}

@@ -3,7 +3,7 @@ import { ThemeSwitcher } from "@/src/app/components/layout/theme-switcher";
 
 export const Navbar: FC = () => {
   return (
-    <div className="header w-full bg-gray-800 text-white py-3 px-8 flex justify-between items-center">
+    <div className="header flex w-full items-center justify-between bg-gray-700 px-3 py-3 text-white dark:bg-gray-800 md:px-8">
       <h1 className="text-2xl">Todo app</h1>
       <ThemeSwitcher />
     </div>

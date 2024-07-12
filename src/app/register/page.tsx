@@ -4,14 +4,15 @@ import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import { InputField } from "@/src/app/components/input-field";
 import { Controller, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 
 interface FormData {
   email: string;
   password: string;
+  passwordConfirmation: string;
 }
 
 export default function Page() {
@@ -19,14 +20,15 @@ export default function Page() {
     handleSubmit,
     control,
     formState: { errors },
+    getValues,
   } = useForm<FormData>();
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (data: FormData) => {
+  const handleRegister = async (data: FormData) => {
     setLoading(true);
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -42,26 +44,26 @@ export default function Page() {
       return;
     }
 
-    toast.success("You have successfully signed in!");
+    toast.success("You have successfully registered!");
     localStorage.setItem("token", json.token);
     router.push("/");
   };
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <div className="flex w-full items-center justify-between px-10 lg:w-2/5">
+      <div className="flex w-2/5 items-center justify-between">
         <Link href="/">
           <FaArrowLeft
             size={24}
             className="cursor-pointer hover:text-gray-800 dark:hover:text-gray-200"
           />
         </Link>
-        <h1 className="text-4xl">Sign in</h1>
+        <h1 className="text-4xl">Sign up</h1>
         <span></span>
       </div>
       <form
-        onSubmit={handleSubmit((data) => handleLogin(data))}
-        className="mt-4 flex w-full flex-col gap-4 px-10 lg:w-2/5"
+        onSubmit={handleSubmit((data) => handleRegister(data))}
+        className="mt-4 flex w-2/5 flex-col gap-4"
       >
         <div>
           <Controller
@@ -102,18 +104,44 @@ export default function Page() {
             {errors.password?.message}
           </span>
         </div>
+
+        <div>
+          <Controller
+            rules={{
+              required: "Password confirmation is required",
+              validate: (value) =>
+                value === getValues("password") || "The passwords do not match",
+            }}
+            name="passwordConfirmation"
+            control={control}
+            defaultValue=""
+            render={({ field }) => {
+              return (
+                <InputField
+                  {...field}
+                  type="password"
+                  label="Password confirmation"
+                />
+              );
+            }}
+          />
+          <span className="text-sm text-red-500">
+            {errors.passwordConfirmation?.message}
+          </span>
+        </div>
+
         <button
           type="submit"
           className="mt-6 rounded-sm bg-emerald-500 py-3 text-xl hover:bg-emerald-600"
         >
-          {loading ? <WhiteLoader /> : "Login"}
+          {loading ? <WhiteLoader /> : "Register"}
         </button>
       </form>
-      <p className="mx-5 mt-5 text-center">
-        If you do not have account yet, you can create one{" "}
+      <p className="mt-5">
+        If you already have an account, you can sign in{" "}
         <Link
           className="font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400"
-          href="/register"
+          href="/login"
         >
           here.
         </Link>

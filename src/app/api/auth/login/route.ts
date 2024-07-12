@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { LoginData } from "@/src/types/user";
 import * as bcrypt from "bcrypt";
@@ -9,28 +9,29 @@ export async function POST(req: NextRequest): Promise<void | Response> {
 
   const user = await prisma.user.findFirst({
     where: { email: userData.email },
+    include: { todoLists: true },
   });
 
   if (!user) {
-    return new Response(
-      JSON.stringify({
-        status: 400,
-        message: "User with this email was not found",
-      }),
+    return NextResponse.json(
+      { message: "User with this email was not found" },
+      { status: 409 },
     );
   }
 
   const passwordMatch = await bcrypt.compare(userData.password, user.password);
 
   if (!passwordMatch) {
-    return new Response(
-      JSON.stringify({ status: 400, message: "Wrong password" }),
-    );
+    return NextResponse.json({ message: "Invalid password" }, { status: 409 });
   }
 
-  const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
-    expiresIn: "1 day",
-  });
+  const jwtToken = jwt.sign(
+    { id: user.id, email: user.email, todoLists: user.todoLists },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: "1 day",
+    },
+  );
 
-  return Response.json({ token: jwtToken });
+  return NextResponse.json({ token: jwtToken }, { status: 200 });
 }

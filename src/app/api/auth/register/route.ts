@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { RegisterData } from "@/src/types/user";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -12,17 +12,16 @@ export async function POST(req: NextRequest): Promise<void | Response> {
   });
 
   if (user) {
-    return new Response(
-      JSON.stringify({
-        status: 409,
-        message: "User with this email is already in the database",
-      }),
+    return NextResponse.json(
+      { message: "User with this email already exists" },
+      { status: 409 },
     );
   }
 
   if (userData.password !== userData.passwordConfirmation) {
-    return new Response(
-      JSON.stringify({ status: 409, message: "Passwords do not match" }),
+    return NextResponse.json(
+      { message: "Passwords do not match" },
+      { status: 409 },
     );
   }
 
@@ -33,12 +32,12 @@ export async function POST(req: NextRequest): Promise<void | Response> {
   });
 
   const jwtToken = jwt.sign(
-    { id: createdUser.id },
+    { id: createdUser.id, email: createdUser.email, todoLists: [] },
     process.env.JWT_SECRET as string,
     {
       expiresIn: "1 day",
     },
   );
 
-  return Response.json({ token: jwtToken });
+  return NextResponse.json({ token: jwtToken }, { status: 200 });
 }

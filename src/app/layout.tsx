@@ -4,6 +4,9 @@ import "./globals.css";
 import { Navbar } from "@/src/app/components/layout/navbar";
 import { clsx } from "clsx";
 import { ThemeProvider } from "next-themes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { StoreProvider } from "@/src/providers/store-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={clsx(inter.className, "layout")}>
-        <ThemeProvider defaultTheme="dark" attribute="class" enableSystem>
-          <Navbar />
-          {children}
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider defaultTheme="dark" attribute="class" enableSystem>
+            <Navbar />
+            {children}
+            <ToastContainer position={"top-right"} />
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );

@@ -4,23 +4,32 @@
 
 html, body {
   min-height: 100vh;
-    @apply bg-gray-200 dark:bg-gray-900;
+    @apply bg-gray-100 dark:bg-gray-900;
 }
 
 .layout {
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr 4fr;
   grid-template-areas:
-  "header header"
+  "header"
+  "m";
+}
+.layout-home {
+  display: grid;
+  grid-template-columns: 2fr 5fr;
+  grid-template-areas:
   "side main";
 }
 
+.m {
+  grid-area: body;
+}
 .header {
   grid-area: header;
 }
 .side {
   grid-area: side;
+  max-width: 400px;
 }
 .main {
   grid-area: main;
