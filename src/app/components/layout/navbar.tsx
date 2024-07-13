@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import { ThemeSwitcher } from "@/src/app/components/layout/theme-switcher";
 

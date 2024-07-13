@@ -5,7 +5,6 @@ import { FaArrowLeft } from "react-icons/fa";
 import { InputField } from "@/src/app/components/input-field";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 
@@ -40,11 +39,11 @@ export default function Page() {
     setLoading(false);
     if (!res.ok) {
       control._reset();
-      toast.error(json.message);
+      console.error(json.message);
       return;
     }
 
-    toast.success("You have successfully registered!");
+    console.log("You have successfully registered!");
     localStorage.setItem("token", json.token);
     router.push("/");
   };

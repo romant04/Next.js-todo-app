@@ -4,7 +4,6 @@ import "./globals.css";
 import { Navbar } from "@/src/app/components/layout/navbar";
 import { clsx } from "clsx";
 import { ThemeProvider } from "next-themes";
-import "react-toastify/dist/ReactToastify.css";
 import { StoreProvider } from "@/src/providers/store-provider";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -4,7 +4,6 @@ import { WhiteLoader } from "@/src/app/components/white-loader";
 import Link from "next/link";
 import { UserData } from "@/src/types/user";
 import { TodoList as ITodoList } from ".prisma/client";
-import { toast } from "react-toastify";
 import { addTodoList } from "@/src/app/redux/slices/todolist-slice";
 import { useDispatch } from "react-redux";
 
@@ -27,7 +26,7 @@ export const SidebarContent: FC<Props> = ({ user, todoLists }) => {
   const handleAddingTodoList = async () => {
     setAddLoading(true);
     if (!title) {
-      toast.error("Title is required");
+      console.error("Title is required");
       return;
     }
     const res = await fetch("/api/todolist", {
@@ -41,7 +40,7 @@ export const SidebarContent: FC<Props> = ({ user, todoLists }) => {
     const json = await res.json();
 
     if (!res.ok) {
-      toast.error(json.message);
+      console.error(json.message);
       return;
     }
 

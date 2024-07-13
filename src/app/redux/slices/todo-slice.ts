@@ -27,10 +27,14 @@ export const todosSlice = createSlice({
       const index = state.todos.findIndex((x) => x.id === action.payload.id);
       state.todos[index] = action.payload;
     },
+    resetTodos: (state) => {
+      state.todos = [];
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { fetchTodos, addTodo, deleteTodo, editTodo } = todosSlice.actions;
+export const { fetchTodos, addTodo, deleteTodo, editTodo, resetTodos } =
+  todosSlice.actions;
 
 export default todosSlice.reducer;

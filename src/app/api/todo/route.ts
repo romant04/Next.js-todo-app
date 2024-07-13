@@ -42,23 +42,31 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  const listId = req.nextUrl.searchParams.get("listId");
+export async function DELETE(req: NextRequest) {
+  const todoId = req.nextUrl.searchParams.get("todoId");
   const userId = req.headers.get("x-user-id");
 
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  if (!listId) {
+  if (!todoId) {
     return NextResponse.json(
-      { message: "List ID is required" },
+      { message: "Todo ID is required" },
       { status: 400 },
     );
   }
 
+  const todo = await prisma.todo.findFirst({
+    where: { id: Number(todoId) },
+  });
+
+  if (!todo) {
+    return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+  }
+
   const todoList = await prisma.todoList.findFirst({
-    where: { id: Number(listId) },
+    where: { id: todo.listId },
   });
 
   if (!todoList) {
@@ -72,9 +80,100 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const todos = await prisma.todo.findMany({
-    where: { listId: Number(listId) },
+  await prisma.todo.delete({ where: { id: Number(todoId) } });
+
+  return NextResponse.json({ message: "Todo deleted" }, { status: 200 });
+}
+
+export async function GET(req: NextRequest) {
+  const todoId = req.nextUrl.searchParams.get("todoId");
+  const userId = req.headers.get("x-user-id");
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!todoId) {
+    return NextResponse.json(
+      { message: "Todo ID is required" },
+      { status: 400 },
+    );
+  }
+
+  const todo = await prisma.todo.findFirst({
+    where: { id: Number(todoId) },
   });
 
-  return NextResponse.json({ todos: todos }, { status: 200 });
+  if (!todo) {
+    return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+  }
+
+  const todoList = await prisma.todoList.findFirst({
+    where: { id: todo.listId },
+  });
+
+  if (!todoList) {
+    return NextResponse.json(
+      { message: "Todo list not found" },
+      { status: 404 },
+    );
+  }
+
+  if (todoList.userId !== Number(userId)) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({ todo: todo }, { status: 200 });
+}
+
+export async function PUT(req: NextRequest) {
+  const data = await req.json();
+  const userId = req.headers.get("x-user-id");
+  const todoId = req.nextUrl.searchParams.get("todoId");
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!todoId) {
+    return NextResponse.json(
+      { message: "Todo ID is required" },
+      { status: 400 },
+    );
+  }
+
+  const todo = await prisma.todo.findFirst({
+    where: { id: Number(todoId) },
+  });
+
+  if (!todo) {
+    return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+  }
+
+  const todoList = await prisma.todoList.findFirst({
+    where: { id: todo.listId },
+  });
+
+  if (!todoList) {
+    return NextResponse.json(
+      { message: "Todo list not found" },
+      { status: 404 },
+    );
+  }
+
+  if (todoList.userId !== Number(userId)) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  const updatedTodo = await prisma.todo.update({
+    where: { id: Number(todoId) },
+    data: {
+      title: data.title,
+      content: data.content,
+      dueDate: data.dueDate,
+      priority: data.priority,
+    },
+  });
+
+  return NextResponse.json({ todo: updatedTodo }, { status: 200 });
 }

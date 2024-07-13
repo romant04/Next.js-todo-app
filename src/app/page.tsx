@@ -1,20 +1,20 @@
 "use client";
 
 import { Sidebar } from "@/src/app/components/sidebar/sidebar";
-import { useAuth } from "@/src/hooks/useAuth";
-import { WhiteLoader } from "@/src/app/components/white-loader";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/src/app/redux/store";
-import Link from "next/link";
-import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { fetchTodos } from "@/src/app/redux/slices/todo-slice";
+import { UserData } from "@/src/types/user";
+import { RootState } from "@/src/app/redux/store";
+import { fetchTodos, resetTodos } from "@/src/app/redux/slices/todo-slice";
+import Link from "next/link";
+import { WhiteLoader } from "@/src/app/components/white-loader";
 import { TodoCard } from "@/src/app/components/todo-card";
+import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { user, loading } = useAuth();
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
   const [todosLoading, setTodosLoading] = useState(false);
 
   const { activeTodoList } = useSelector((state: RootState) => state.todoLists);
@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchServerTodos = async () => {
-      const res = await fetch(`/api/todo?listId=${activeTodoList!.id}`, {
+      const res = await fetch(`/api/todos?listId=${activeTodoList!.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -32,7 +32,7 @@ export default function Home() {
       setTodosLoading(false);
 
       if (!res.ok) {
-        toast.error(json.message);
+        console.error(json.message);
         return;
       }
 
@@ -40,23 +40,51 @@ export default function Home() {
     };
 
     if (activeTodoList) {
+      dispatch(resetTodos());
       setTodosLoading(true);
       void fetchServerTodos();
     }
   }, [activeTodoList]);
 
-  if (loading)
-    return (
-      <div>
-        <WhiteLoader />
-      </div>
-    );
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      console.log("window is undefined");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setLoading(true);
+    const checkToken = async () => {
+      const res = await fetch(`/api/auth/checkToken?token=${token}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
+
+      setLoading(false);
+      const valid = json.isValid;
+
+      if (!valid) return;
+      setUser({ ...json.user });
+    };
+
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    void checkToken();
+  }, []);
 
   return (
     <div className="layout-home">
-      <Sidebar />
+      <Sidebar user={user} loading={loading} />
       <div className="main dark:bg-gray-900 dark:text-white">
-        {user ? (
+        {loading ? (
+          <WhiteLoader />
+        ) : user ? (
           <>
             {activeTodoList ? (
               <div className="mx-10 mt-20 flex flex-col items-center md:mt-8 lg:mx-auto lg:w-4/5">
@@ -70,7 +98,7 @@ export default function Home() {
                       },
                     }}
                   >
-                    <button className="rounded-md bg-emerald-600 px-8 py-2 hover:bg-emerald-700">
+                    <button className="rounded-md bg-emerald-600 px-8 py-2 text-white hover:bg-emerald-700">
                       Add todo
                     </button>
                   </Link>

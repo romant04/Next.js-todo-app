@@ -18,7 +18,9 @@ export const todoListSlice = createSlice({
   reducers: {
     fetchTodoList: (state, action: PayloadAction<TodoList[]>) => {
       state.todoLists = action.payload;
-      state.activeTodoList = action.payload[0];
+      if (!state.activeTodoList) {
+        state.activeTodoList = action.payload[0];
+      }
     },
     addTodoList: (state, action: PayloadAction<TodoList>) => {
       state.todoLists.push(action.payload);

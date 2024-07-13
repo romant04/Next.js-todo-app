@@ -6,7 +6,6 @@ import { InputField } from "@/src/app/components/input-field";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 
 interface FormData {
@@ -38,11 +37,11 @@ export default function Page() {
     setLoading(false);
     if (!res.ok) {
       control._reset();
-      toast.error(json.message);
+      console.error(json.message);
       return;
     }
 
-    toast.success("You have successfully signed in!");
+    console.log("You have successfully signed in!");
     localStorage.setItem("token", json.token);
     router.push("/");
   };

@@ -31,12 +31,13 @@ export const TodoList: FC<Props> = ({ title, id }) => {
     });
     const json = await res.json();
 
+    setLoading(false);
+
     if (!res.ok) {
       console.error(json.message);
       return;
     }
 
-    setLoading(false);
     dispatch(deleteTodoList(id));
   };
 
