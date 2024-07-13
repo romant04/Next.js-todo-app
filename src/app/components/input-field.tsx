@@ -8,7 +8,7 @@ interface Props {
   value: string;
 }
 
-export const InputField = React.forwardRef<HTMLInputElement, Props>(
+const InputField = React.forwardRef<HTMLInputElement, Props>(
   ({ type, label, onChange, onBlur, value }, ref) => {
     return (
       <div className="flex flex-col">
@@ -26,3 +26,6 @@ export const InputField = React.forwardRef<HTMLInputElement, Props>(
     );
   },
 );
+
+InputField.displayName = "InputField";
+export { InputField };

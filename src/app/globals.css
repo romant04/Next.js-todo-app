@@ -34,3 +34,11 @@ html, body {
 .main {
   grid-area: main;
 }
+
+@media only screen and (max-width: 768px) {
+    .layout-home {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+        "main"
+    }
+}
