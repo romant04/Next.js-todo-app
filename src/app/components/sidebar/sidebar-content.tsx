@@ -62,7 +62,7 @@ export const SidebarContent: FC<Props> = ({ user, todoLists }) => {
         <div className="flex w-4/5 flex-col">
           <div className="mt-3 flex flex-col gap-2">
             {todoLists.map((list) => (
-              <TodoList title={list.title} />
+              <TodoList key={list.title} title={list.title} />
             ))}
           </div>
 
