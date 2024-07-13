@@ -4,7 +4,6 @@ import "./globals.css";
 import { Navbar } from "@/src/app/components/layout/navbar";
 import { clsx } from "clsx";
 import { ThemeProvider } from "next-themes";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { StoreProvider } from "@/src/providers/store-provider";
 
@@ -27,7 +26,6 @@ export default function RootLayout({
           <ThemeProvider defaultTheme="dark" attribute="class" enableSystem>
             <Navbar />
             {children}
-            <ToastContainer position={"top-right"} />
           </ThemeProvider>
         </StoreProvider>
       </body>

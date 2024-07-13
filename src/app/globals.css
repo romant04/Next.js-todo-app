@@ -35,6 +35,13 @@ html, body {
   grid-area: main;
 }
 
+@media only screen and (min-width: 1376px) {
+    .layout-home {
+        grid-template-columns: 400px 5fr;
+        grid-template-areas:
+        "side main";
+    }
+}
 @media only screen and (max-width: 768px) {
     .layout-home {
         grid-template-columns: 1fr;

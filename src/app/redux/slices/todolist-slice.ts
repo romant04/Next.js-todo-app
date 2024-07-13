@@ -24,14 +24,13 @@ export const todoListSlice = createSlice({
       state.todoLists.push(action.payload);
       if (state.todoLists.length === 1) state.activeTodoList = action.payload;
     },
-    deleteTodoList: (state, action: PayloadAction<string>) => {
-      state.todoLists = state.todoLists.filter(
-        (x) => x.title !== action.payload,
-      );
+    deleteTodoList: (state, action: PayloadAction<number>) => {
+      state.todoLists = state.todoLists.filter((x) => x.id !== action.payload);
+      state.activeTodoList = state.todoLists[0] || null;
     },
-    setActiveTodoList: (state, action: PayloadAction<string>) => {
+    setActiveTodoList: (state, action: PayloadAction<number>) => {
       state.activeTodoList = state.todoLists.find(
-        (x) => x.title === action.payload,
+        (x) => x.id === action.payload,
       ) as TodoList;
     },
   },

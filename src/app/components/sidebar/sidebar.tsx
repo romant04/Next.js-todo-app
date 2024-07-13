@@ -6,11 +6,11 @@ import { WhiteLoader } from "@/src/app/components/white-loader";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTodoList } from "@/src/app/redux/slices/todolist-slice";
 import { RootState } from "@/src/app/redux/store";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { clsx } from "clsx";
 import { SidebarContent } from "@/src/app/components/sidebar/sidebar-content";
 import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
+import { useMediaQuery } from "@/src/hooks/useMediaQuery";
 
 export const Sidebar: FC = () => {
   const { user, loading } = useAuth();

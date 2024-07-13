@@ -59,10 +59,10 @@ export const SidebarContent: FC<Props> = ({ user, todoLists }) => {
             <p>You have no todo lists yet</p>
           </div>
         )}
-        <div className="flex w-4/5 flex-col">
-          <div className="mt-3 flex flex-col gap-2">
+        <div className="flex w-4/5 flex-col md:w-full">
+          <div className="mt-3 flex flex-col gap-2 md:w-full">
             {todoLists.map((list) => (
-              <TodoList key={list.title} title={list.title} />
+              <TodoList key={list.id} title={list.title} id={list.id} />
             ))}
           </div>
 
@@ -90,7 +90,7 @@ export const SidebarContent: FC<Props> = ({ user, todoLists }) => {
             </div>
           ) : (
             <button
-              className="mt-2 rounded-sm bg-emerald-500 px-4 py-2 hover:bg-emerald-600"
+              className="mt-2 w-full rounded-sm bg-emerald-500 px-4 py-2 hover:bg-emerald-600"
               onClick={() => setAddMode(true)}
             >
               Add todo list
