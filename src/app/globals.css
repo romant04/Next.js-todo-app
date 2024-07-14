@@ -10,6 +10,8 @@ body {
 
 .layout {
   display: grid;
+  height: 100vh;
+  overflow: hidden;
   grid-template-rows: auto 1fr;
   grid-template-areas:
     "header"
@@ -22,7 +24,7 @@ body {
 }
 
 .m {
-  grid-area: body;
+  grid-area: m;
 }
 .header {
   grid-area: header;
@@ -30,9 +32,12 @@ body {
 .side {
   grid-area: side;
   max-width: 400px;
+  max-height: calc(100vh - 64px);
 }
 .main {
   grid-area: main;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 
 @media only screen and (min-width: 1376px) {

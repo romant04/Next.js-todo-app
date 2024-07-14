@@ -24,7 +24,7 @@ export const TodosFilter: FC = () => {
   };
 
   return (
-    <div className="mt-5 flex w-full gap-5">
+    <div className="mt-5 flex w-full justify-center gap-5 md:justify-start">
       <div>
         <span>Sort by: </span>
         <select

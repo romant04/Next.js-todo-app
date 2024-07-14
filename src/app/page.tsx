@@ -126,7 +126,7 @@ export default function Home() {
                   </Link>
                 </div>
                 <TodosFilter />
-                <div className="mt-5 flex w-full flex-wrap justify-center gap-5 md:justify-start">
+                <div className="my-5 flex w-full flex-wrap justify-center gap-5 md:justify-start">
                   {todosLoading ? (
                     <WhiteLoader />
                   ) : (
