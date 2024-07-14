@@ -3,7 +3,7 @@ import { Todo } from ".prisma/client";
 import { clsx } from "clsx";
 import { FaPenSquare, FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { deleteTodo } from "@/src/app/redux/slices/todo-slice";
+import { checkTodo, deleteTodo } from "@/src/app/redux/slices/todo-slice";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 import Link from "next/link";
 import { toast } from "react-toastify";
@@ -14,6 +14,7 @@ interface Props {
 
 export const TodoCard: FC<Props> = ({ todo }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [checkLoading, setCheckLoading] = useState(false);
   const dispatch = useDispatch();
 
   const handleDelete = async () => {
@@ -35,6 +36,27 @@ export const TodoCard: FC<Props> = ({ todo }) => {
     dispatch(deleteTodo(todo.id));
   };
 
+  const handleCheck = async () => {
+    setCheckLoading(true);
+    const res = await fetch(`/api/todo?todoId=${todo.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ ...todo, completed: !todo.completed }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const json = await res.json();
+
+    setCheckLoading(false);
+    if (!res.ok) {
+      toast.error(json.message);
+      return;
+    }
+
+    dispatch(checkTodo(todo.id));
+  };
+
   return (
     <div
       className={clsx(
@@ -46,6 +68,22 @@ export const TodoCard: FC<Props> = ({ todo }) => {
     >
       <div className="flex justify-between">
         <h3 className="text-xl font-semibold">{todo.title}</h3>
+        {checkLoading ? (
+          <WhiteLoader />
+        ) : (
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            className="hover: h-5 w-5 cursor-pointer accent-emerald-300 [color-scheme:light]"
+            onChange={handleCheck}
+          />
+        )}
+      </div>
+      <p className="h-28 overflow-auto font-light">{todo.content}</p>
+      <div className="flex justify-between">
+        <span className="mt-auto text-sm text-gray-200">
+          {new Date(todo.dueDate).toLocaleDateString()}
+        </span>
         <div className="flex gap-5">
           <Link href={{ pathname: "/editTodo", query: { todoId: todo.id } }}>
             <FaPenSquare
@@ -64,10 +102,6 @@ export const TodoCard: FC<Props> = ({ todo }) => {
           )}
         </div>
       </div>
-      <p className="h-28 overflow-auto font-light">{todo.content}</p>
-      <span className="mt-auto text-sm text-gray-200">
-        {new Date(todo.dueDate).toLocaleDateString()}
-      </span>
     </div>
   );
 };

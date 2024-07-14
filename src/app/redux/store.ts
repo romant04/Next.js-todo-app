@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import todoListsReducer from "./slices/todolist-slice";
 import sidebarReducer from "./slices/sidebar-slice";
 import todoReducer from "./slices/todo-slice";
+import todoFilters from "./slices/todo-filters-slice";
 
 export const store = configureStore({
   reducer: {
     todoLists: todoListsReducer,
     sidebar: sidebarReducer,
     todos: todoReducer,
+    todoFilters: todoFilters,
   },
 });
 

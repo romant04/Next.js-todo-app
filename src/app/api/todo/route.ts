@@ -172,6 +172,7 @@ export async function PUT(req: NextRequest) {
       content: data.content,
       dueDate: data.dueDate,
       priority: data.priority,
+      completed: data.completed,
     },
   });
 

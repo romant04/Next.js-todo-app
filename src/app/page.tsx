@@ -11,6 +11,7 @@ import { WhiteLoader } from "@/src/app/components/white-loader";
 import { TodoCard } from "@/src/app/components/todo-card";
 import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
 import { toast } from "react-toastify";
+import { TodosFilter } from "@/src/app/components/todos-filter";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -20,6 +21,9 @@ export default function Home() {
 
   const { activeTodoList } = useSelector((state: RootState) => state.todoLists);
   const { todos } = useSelector((state: RootState) => state.todos);
+  const { sortBy, filterBy } = useSelector(
+    (state: RootState) => state.todoFilters,
+  );
 
   useEffect(() => {
     const fetchServerTodos = async () => {
@@ -78,6 +82,24 @@ export default function Home() {
     void checkToken();
   }, []);
 
+  const sortedTodos = todos
+    .filter((todo) => {
+      if (filterBy === "all") return true;
+      if (filterBy === "completed") return todo.completed;
+      if (filterBy === "uncompleted") return !todo.completed;
+    })
+    .sort((a, b) => {
+      if (sortBy === "date") {
+        return Number(new Date(a.dueDate)) < Number(new Date(b.dueDate))
+          ? -1
+          : 1;
+      } else if (sortBy === "priority") {
+        return a.priority < b.priority ? -1 : 1;
+      } else {
+        return 0;
+      }
+    });
+
   return (
     <div className="layout-home">
       <Sidebar user={user} loading={loading} />
@@ -88,7 +110,7 @@ export default function Home() {
           <>
             {activeTodoList ? (
               <div className="mx-10 mt-20 flex flex-col items-center md:mt-8 lg:mx-auto lg:w-4/5">
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-center justify-between gap-3 md:flex-row">
                   <h2 className="text-2xl">{activeTodoList.title}</h2>
                   <Link
                     href={{
@@ -98,17 +120,18 @@ export default function Home() {
                       },
                     }}
                   >
-                    <button className="rounded-md bg-emerald-600 px-8 py-2 text-white hover:bg-emerald-700">
+                    <button className="rounded-sm bg-emerald-600 px-8 py-2 text-white hover:bg-emerald-700">
                       Add todo
                     </button>
                   </Link>
                 </div>
-                <div className="mt-5 flex w-full flex-wrap gap-5">
+                <TodosFilter />
+                <div className="mt-5 flex w-full flex-wrap justify-center gap-5 md:justify-start">
                   {todosLoading ? (
                     <WhiteLoader />
                   ) : (
                     <>
-                      {todos.map((todo) => (
+                      {sortedTodos.map((todo) => (
                         <TodoCard todo={todo} key={todo.id} />
                       ))}
                     </>
