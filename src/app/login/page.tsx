@@ -7,6 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { WhiteLoader } from "@/src/app/components/white-loader";
+import { toast } from "react-toastify";
 
 interface FormData {
   email: string;
@@ -37,11 +38,11 @@ export default function Page() {
     setLoading(false);
     if (!res.ok) {
       control._reset();
-      console.error(json.message);
+      toast.error(json.message);
       return;
     }
 
-    console.log("You have successfully signed in!");
+    toast.success("You have successfully signed in!");
     localStorage.setItem("token", json.token);
     router.push("/");
   };

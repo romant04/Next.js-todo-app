@@ -66,14 +66,20 @@ export const TodoForm: FC<Props> = ({
 
       <div className="flex flex-col">
         <label>Due date</label>
-        <input
-          {...register("dueDate", {
-            required: "Due date is required",
-            valueAsDate: true,
-          })}
-          type="date"
+        <Controller
+          control={control}
+          rules={{ required: "Due date is required" }}
           name="dueDate"
-          className="rounded-sm bg-gray-500 p-1 text-lg text-white [color-scheme:dark] dark:bg-gray-200 dark:text-black dark:[color-scheme:light]"
+          render={({ field: { name, onChange, value, ref } }) => (
+            <input
+              name={name}
+              type="date"
+              onChange={onChange}
+              ref={ref}
+              className="rounded-sm bg-gray-500 p-1 text-lg text-white [color-scheme:dark] dark:bg-gray-200 dark:text-black dark:[color-scheme:light]"
+              value={value ? new Date(value).toISOString().split("T")[0] : ""}
+            />
+          )}
         />
         <span className="text-sm text-red-500">{errors.dueDate?.message}</span>
       </div>

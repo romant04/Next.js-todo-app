@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { addTodo } from "@/src/app/redux/slices/todo-slice";
 import { TodoForm } from "@/src/app/components/todo-form";
 import { TodoFormData } from "@/src/types/todo";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const {
@@ -20,7 +21,7 @@ export default function Page() {
     defaultValues: {
       title: "",
       content: "",
-      dueDate: new Date().toLocaleDateString(),
+      dueDate: "",
       priority: 1,
     },
   });
@@ -34,7 +35,11 @@ export default function Page() {
     setLoading(true);
     const res = await fetch("/api/todo", {
       method: "POST",
-      body: JSON.stringify({ ...data, listId: listId }),
+      body: JSON.stringify({
+        ...data,
+        dueDate: new Date(data.dueDate).toISOString(),
+        listId: listId,
+      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +50,7 @@ export default function Page() {
     setLoading(false);
 
     if (!res.ok) {
-      console.error(json.message);
+      toast.error(json.message);
       return;
     }
 

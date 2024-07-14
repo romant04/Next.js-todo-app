@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { editTodo } from "@/src/app/redux/slices/todo-slice";
 import { TodoForm } from "@/src/app/components/todo-form";
 import { TodoFormData } from "@/src/types/todo";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const {
@@ -31,7 +32,11 @@ export default function Page() {
     setLoading(true);
     const res = await fetch(`/api/todo?todoId=${todoId}`, {
       method: "PUT",
-      body: JSON.stringify({ ...data, listId: listId }),
+      body: JSON.stringify({
+        ...data,
+        dueDate: new Date(data.dueDate).toISOString(),
+        listId: listId,
+      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -42,7 +47,7 @@ export default function Page() {
     setLoading(false);
 
     if (!res.ok) {
-      console.error(json.message);
+      toast.error(json.message);
       return;
     }
 
@@ -60,20 +65,19 @@ export default function Page() {
       });
       const json = await res.json();
 
-      setFetchLoading(false);
       if (!res.ok) {
-        console.error(json.message);
+        setFetchLoading(false);
+        toast.error(json.message);
         return;
       }
 
-      setValue(
-        "dueDate",
-        new Date(json.todo.dueDate).toISOString().split("T")[0],
-      );
+      setValue("dueDate", json.todo.dueDate);
       setValue("title", json.todo.title);
       setValue("content", json.todo.content);
       setValue("priority", json.todo.priority);
       setListId(json.todo.listId);
+
+      setFetchLoading(false);
     };
 
     if (todoId) {

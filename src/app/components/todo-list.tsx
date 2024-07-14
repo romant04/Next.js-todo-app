@@ -8,6 +8,7 @@ import { RootState } from "@/src/app/redux/store";
 import { clsx } from "clsx";
 import { FaTrash } from "react-icons/fa";
 import { WhiteLoader } from "@/src/app/components/white-loader";
+import { toast } from "react-toastify";
 
 interface Props {
   title: string;
@@ -34,7 +35,7 @@ export const TodoList: FC<Props> = ({ title, id }) => {
     setLoading(false);
 
     if (!res.ok) {
-      console.error(json.message);
+      toast.error(json.message);
       return;
     }
 

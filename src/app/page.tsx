@@ -10,6 +10,7 @@ import Link from "next/link";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 import { TodoCard } from "@/src/app/components/todo-card";
 import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ export default function Home() {
       setTodosLoading(false);
 
       if (!res.ok) {
-        console.error(json.message);
+        toast.error(json.message);
         return;
       }
 
@@ -48,7 +49,6 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window === "undefined") {
-      console.log("window is undefined");
       return;
     }
 

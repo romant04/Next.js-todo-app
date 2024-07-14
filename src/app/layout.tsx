@@ -5,6 +5,8 @@ import { Navbar } from "@/src/app/components/layout/navbar";
 import { clsx } from "clsx";
 import { ThemeProvider } from "next-themes";
 import { StoreProvider } from "@/src/providers/store-provider";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +27,7 @@ export default function RootLayout({
           <ThemeProvider defaultTheme="dark" attribute="class" enableSystem>
             <Navbar />
             {children}
+            <ToastContainer position="top-right" />
           </ThemeProvider>
         </StoreProvider>
       </body>

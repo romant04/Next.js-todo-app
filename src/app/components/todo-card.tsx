@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { deleteTodo } from "@/src/app/redux/slices/todo-slice";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 interface Props {
   todo: Todo;
@@ -27,7 +28,7 @@ export const TodoCard: FC<Props> = ({ todo }) => {
 
     setDeleteLoading(false);
     if (!res.ok) {
-      console.error(json.message);
+      toast.error(json.message);
       return;
     }
 
