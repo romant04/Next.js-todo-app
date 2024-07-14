@@ -2,23 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   min-height: 100vh;
-    @apply bg-gray-100 dark:bg-gray-900;
+  @apply bg-gray-100 dark:bg-gray-900;
 }
 
 .layout {
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-areas:
-  "header"
-  "m";
+    "header"
+    "m";
 }
 .layout-home {
   display: grid;
   grid-template-columns: 2fr 5fr;
-  grid-template-areas:
-  "side main";
+  grid-template-areas: "side main";
 }
 
 .m {
@@ -36,16 +36,17 @@ html, body {
 }
 
 @media only screen and (min-width: 1376px) {
-    .layout-home {
-        grid-template-columns: 400px 5fr;
-        grid-template-areas:
-        "side main";
-    }
+  .layout-home {
+    grid-template-columns: 400px 5fr;
+    grid-template-areas: "side main";
+  }
 }
 @media only screen and (max-width: 768px) {
-    .layout-home {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-        "main"
-    }
+  .layout-home {
+    grid-template-columns: 1fr;
+    grid-template-areas: "main";
+  }
+  .side {
+    display: none;
+  }
 }

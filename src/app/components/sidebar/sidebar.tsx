@@ -46,7 +46,7 @@ export const Sidebar: FC<Props> = ({ user, loading }) => {
         />
         <div
           className={clsx(
-            "absolute h-full bg-gray-600 pb-8 pt-5 text-white transition-all duration-300 ease-out dark:bg-gray-700",
+            "absolute left-0 top-[74px] h-full bg-gray-600 pb-8 pt-5 text-white transition-all duration-300 ease-out dark:bg-gray-700",
             open ? "w-full" : "w-0",
           )}
         >
@@ -61,7 +61,7 @@ export const Sidebar: FC<Props> = ({ user, loading }) => {
         </div>
       </div>
 
-      <div className="side hidden flex-col items-center justify-between bg-gray-600 pb-8 pt-5 text-white dark:bg-gray-700 md:flex">
+      <div className="side flex flex-col items-center justify-between bg-gray-600 pb-8 pt-5 text-white dark:bg-gray-700">
         <SidebarContent user={user} todoLists={todoLists} />
       </div>
     </>

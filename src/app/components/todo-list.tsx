@@ -9,6 +9,7 @@ import { clsx } from "clsx";
 import { FaTrash } from "react-icons/fa";
 import { WhiteLoader } from "@/src/app/components/white-loader";
 import { toast } from "react-toastify";
+import { toggleSidebar } from "@/src/app/redux/slices/sidebar-slice";
 
 interface Props {
   title: string;
@@ -42,13 +43,18 @@ export const TodoList: FC<Props> = ({ title, id }) => {
     dispatch(deleteTodoList(id));
   };
 
+  const handleSelectingTodoList = () => {
+    dispatch(setActiveTodoList(id));
+    dispatch(toggleSidebar(false));
+  };
+
   return (
     <div
       className={clsx(
         "flex w-full cursor-pointer items-center justify-between bg-gray-500 p-1 text-lg hover:bg-gray-700 dark:hover:bg-gray-600",
         activeTodoList?.id === id && "bg-gray-700 dark:bg-gray-600",
       )}
-      onClick={() => dispatch(setActiveTodoList(id))}
+      onClick={handleSelectingTodoList}
     >
       <span>{title}</span>
       {loading ? (

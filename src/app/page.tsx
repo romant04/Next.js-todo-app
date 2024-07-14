@@ -140,7 +140,9 @@ export default function Home() {
               </div>
             ) : (
               <div className="mt-20 flex flex-col items-center md:mt-8">
-                <span>You need to add todo list to start adding todos</span>
+                <span className="text-center">
+                  You need to add todo list to start adding todos
+                </span>
                 <button
                   className="mt-4 rounded-md bg-emerald-600 px-8 py-2 hover:bg-emerald-700 md:hidden"
                   onClick={() => dispatch(toggleSidebar(true))}
@@ -152,7 +154,9 @@ export default function Home() {
           </>
         ) : (
           <div className="mt-20 flex flex-col items-center md:mt-8">
-            <span>You need to be signed in to start adding todos</span>
+            <span className="text-center">
+              You need to be signed in to start adding todos
+            </span>
             <Link href="/login">
               <button className="mt-4 rounded-md bg-emerald-600 px-8 py-2 hover:bg-emerald-700">
                 Sign in

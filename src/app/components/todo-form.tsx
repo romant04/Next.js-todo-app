@@ -26,7 +26,7 @@ export const TodoForm: FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit((data: TodoFormData) => handleAddEdit(data))}
-      className="mt-4 flex w-full flex-col gap-4 px-10 lg:w-2/5"
+      className="mt-4 flex w-full flex-col gap-4 px-5 md:px-10 lg:w-2/5"
     >
       <div>
         <Controller
