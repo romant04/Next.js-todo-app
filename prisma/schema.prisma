@@ -23,7 +23,7 @@ model Todo {
   priority  Int
   listId    Int
   content   String?
-  list      TodoList @relation(fields: [listId], references: [id])
+  list      TodoList @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
 
 model TodoList {
